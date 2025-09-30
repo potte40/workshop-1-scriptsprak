@@ -19,5 +19,5 @@ for location in data["locations"]:
         report += "  " + device["hostname"] + "\n"
 
 # write the report to text file
-with open('report.txt', 'w', encoding='utf-8') as f:
+with open('network_report.txt', 'w', encoding='utf-8') as f:
     f.write(report)
