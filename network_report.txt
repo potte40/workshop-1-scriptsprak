@@ -1,15 +1,15 @@
 ================================================================================
                          NÄTVERKSRAPPORT - TechCorp AB                          
 ================================================================================
-Rapportdatum: 2025-10-02 16:12:18
+Rapportdatum: 2025-10-02 16:52:34
 Datauppdatering: 2024-09-30T10:30:00
 ================================================================================
 EXECUTIVE SUMMARY
 -----------------
 ⚠ KRITISKT: 2 enheter offline
 ⚠ VARNING: 3 enheter med varningsstatus
-⚠ 9 enheter med låg uptime (<30 dagar) - kan indikera instabilitet
-⚠ 11 switchar har hög portanvändning (>80%)
+⚠ 9 enheter med låg uptime (mindre än 30 dagar) - kan indikera instabilitet
+⚠ 11 switchar har hög portanvändning (mer än 80%)
 
 Huvudkontor - Stockholm
  hostname        vendor      uptime_days         status          ipaddress      

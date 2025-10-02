@@ -6,9 +6,7 @@ from datetime import datetime
 
 # Read json from products.json to the variable products
 # open(filePath, "r" for read, encoding = character encoding)
-
 data = json.load(open("network_devices.json","r",encoding = "utf-8"))
-
 
 # Create a variable that holds our whole text report
 report = ""
@@ -24,12 +22,12 @@ last_updated = data["last_updated"]
 report += "Rapportdatum: " + now + "\n" + "Datauppdatering: " + last_updated + "\n" + "="*80
 
 # Executive Summary
-# Göra loopar och ifsatser för det jag vill veta
+# Fixa countsvariablar
 offline_count = 0
 warning_count = 0
 low_uptime_count = 0
 high_port_usage_count = 0
-
+# Göra loopar och ifsatser för det jag vill veta
 for location in data["locations"]:
     for device in location["devices"]:
         status = device["status"].lower()
@@ -55,8 +53,8 @@ report += "\nEXECUTIVE SUMMARY\n"
 report += "-----------------\n"
 report += f"⚠ KRITISKT: {offline_count} enheter offline\n"
 report += f"⚠ VARNING: {warning_count} enheter med varningsstatus\n"
-report += f"⚠ {low_uptime_count} enheter med låg uptime (<30 dagar) - kan indikera instabilitet\n"
-report += f"⚠ {high_port_usage_count} switchar har hög portanvändning (>80%)\n"
+report += f"⚠ {low_uptime_count} enheter med låg uptime (mindre än 30 dagar) - kan indikera instabilitet\n"
+report += f"⚠ {high_port_usage_count} switchar har hög portanvändning (mer än 80%)\n"
 
 # loop through the location list
 for location in data["locations"]:
@@ -72,16 +70,6 @@ for location in data["locations"]:
                    + str(device["status"]).ljust(15) + " "
                    + str(device["ip_address"]).ljust(15) + " "
                    + "\n")
-
-# Create an empty summary
-summary = ""
-
-# Somewhere later in our report add something to summary
-summary += "Summary:\n"
-summary += "This is our basic report:"
-
-# Add summary before main report
-#report = summary + report
 
 # write the report to text file
 with open('network_report.txt', 'w', encoding='utf-8') as f:
