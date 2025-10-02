@@ -58,19 +58,37 @@ report += f"⚠ {high_port_usage_count} switchar har hög portanvändning (mer �
 
 # loop through the location list
 for location in data["locations"]:
-    # add the site/"name" of the location to the report
-    report += "\n" + location["site"] + " - " + location["city"] + "\n" + " " + "hostname".ljust(15) + " " + "vendor".ljust(11) + " " + "uptime_days".ljust(20) + "status".ljust(16) + "ipaddress".ljust(15) + "\n"
-    # add a list of the host names of the devices
-    # on the location to the report
+    report += f"\n{location['site']} - {location['city']}\n" + "-"*24 + "\n"
+    report += "hostname".ljust(16) + "vendor".ljust(12) + "uptime_days".ljust(20) + "status".ljust(16) + "ipaddress".ljust(15) + "\n"
+
+    type_counts = {}  # En ordlista för att räkna varje typ
+    total_devices = 0
+
     for device in location["devices"]:
-        report += (" " 
+        report += ("" 
                    + device["hostname"].ljust(15) + " "
                    + device["vendor"].ljust(15) + " "
                    + str(device["uptime_days"]).ljust(15) + " " 
                    + str(device["status"]).ljust(15) + " "
-                   + str(device["ip_address"]).ljust(15) + " "
-                   + "\n")
+                   + str(device["ip_address"]).ljust(15) + "\n")
+        total_devices += 1
 
+        device_type = device["type"]
+        if device_type in type_counts:
+            type_counts[device_type] += 1
+        else:
+            type_counts[device_type] = 1
+    report += "-"*22 + "\n"
+    # Skriv total per typ
+    report += "Totalt per enhetstyp:\n"
+    for dev_type, count in type_counts.items():
+        report += f"{dev_type.ljust(15)}: {count} st\n"
+    
+    report += "-"*28 + "\n"
+
+    # Skriv totalen för hela site
+    report += f"Totalt antal enheter : {total_devices} st\n" + "-"*80
+        
 # write the report to text file
 with open('network_report.txt', 'w', encoding='utf-8') as f:
     f.write(report)
