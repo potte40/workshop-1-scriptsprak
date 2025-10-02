@@ -1,5 +1,6 @@
-Summary:
-This is our basic report:
+Company: TechCorp AB
+Last Updated: 2024-09-30T10:30:00
+
 Huvudkontor
   SW-CORE-01      Cisco            145 
   SW-CORE-02      Cisco            145 

@@ -9,6 +9,12 @@ data = json.load(open("network_devices.json","r",encoding = "utf-8"))
 # Create a variable that holds our whole text report
 report = ""
 
+# Company name + last_updated data
+company = data["company"]
+last_updated = data["last_updated"]
+report += "Company: " + company + "\n" + "Last Updated: " + last_updated + "\n"
+
+
 # loop through the location list
 for location in data["locations"]:
     # add the site/"name" of the location to the report
@@ -30,7 +36,7 @@ summary += "Summary:\n"
 summary += "This is our basic report:"
 
 # Add summary before main report
-report = summary + report
+#report = summary + report
 
 # write the report to text file
 with open('network_report.txt', 'w', encoding='utf-8') as f:
