@@ -63,7 +63,7 @@ for location in data["locations"]:
 
     type_counts = {}  # En ordlista för att räkna varje typ
     total_devices = 0
-
+# loop för att hitta alla typer
     for device in location["devices"]:
         report += ("" 
                    + device["hostname"].ljust(15) + " "
