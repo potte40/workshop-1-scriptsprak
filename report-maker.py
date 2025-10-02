@@ -1,21 +1,22 @@
 # Import the json library so that we can handle json
 import json
 
+# Import time so that we can handle time
+from datetime import datetime
+
 # Read json from products.json to the variable products
 # open(filePath, "r" for read, encoding = character encoding)
 
 data = json.load(open("network_devices.json","r",encoding = "utf-8"))
 
-# Import time
-from datetime import datetime
 
 # Create a variable that holds our whole text report
 report = ""
 
 # Rapportens namn + företag
 company = data["company"]
-report += ("================================================================================" + "\n" + f"NÄTVERKSRAPPORT - {company}".center(80) 
-+ "\n" + "================================================================================" + "\n")
+report += ("="*80 + "\n" + f"NÄTVERKSRAPPORT - {company}".center(80) 
++ "\n" + "="*80 + "\n")
 
 # Rapportdatum + datauppdatering
 now = datetime.now().strftime("%Y-%m-%d %H:%M:%S") #Formaterat till sträng
