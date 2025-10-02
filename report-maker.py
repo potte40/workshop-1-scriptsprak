@@ -6,13 +6,21 @@ import json
 
 data = json.load(open("network_devices.json","r",encoding = "utf-8"))
 
+# Import time
+from datetime import datetime
+
 # Create a variable that holds our whole text report
 report = ""
 
-# Company name + last_updated data
+# Rapportens namn + företag
 company = data["company"]
+report += ("================================================================================" + "\n" + f"NÄTVERKSRAPPORT - {company}".center(80) 
++ "\n" + "================================================================================" + "\n")
+
+# Rapportdatum + datauppdatering
+now = datetime.now().strftime("%Y-%m-%d %H:%M:%S") #Formaterat till sträng
 last_updated = data["last_updated"]
-report += "Company: " + company + "\n" + "Last Updated: " + last_updated + "\n"
+report += "Rapportdatum: " + now + "\n" + "Datauppdatering: " + last_updated + "\n"
 
 
 # loop through the location list
