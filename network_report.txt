@@ -1,55 +1,67 @@
 ================================================================================
                          NÄTVERKSRAPPORT - TechCorp AB                          
 ================================================================================
-Rapportdatum: 2025-10-02 14:18:02
+Rapportdatum: 2025-10-02 16:12:18
 Datauppdatering: 2024-09-30T10:30:00
+================================================================================
+EXECUTIVE SUMMARY
+-----------------
+⚠ KRITISKT: 2 enheter offline
+⚠ VARNING: 3 enheter med varningsstatus
+⚠ 9 enheter med låg uptime (<30 dagar) - kan indikera instabilitet
+⚠ 11 switchar har hög portanvändning (>80%)
 
-Huvudkontor
-  SW-CORE-01      Cisco            145 
-  SW-CORE-02      Cisco            145 
-  SW-DIST-01      Cisco             89 
-  SW-DIST-02      Cisco             89 
-  SW-ACCESS-03    HP                 0 
-  SW-ACCESS-04    HP               234 
-  SW-ACCESS-05    HP                15 
-  RT-EDGE-01      Fortinet         234 
-  RT-EDGE-02      Fortinet         234 
-  AP-FLOOR1-01    Ubiquiti          67 
-  AP-FLOOR1-02    Ubiquiti          67 
-  AP-FLOOR2-01    Ubiquiti          12 
-  AP-FLOOR2-02    Ubiquiti           2 
-  AP-FLOOR3-01    Cisco            156 
-  FW-DMZ-01       Palo Alto         89 
+Huvudkontor - Stockholm
+ hostname        vendor      uptime_days         status          ipaddress      
+ SW-CORE-01      Cisco           145             online          192.168.1.1     
+ SW-CORE-02      Cisco           145             online          192.168.1.2     
+ SW-DIST-01      Cisco           89              online          192.168.1.3     
+ SW-DIST-02      Cisco           89              online          192.168.1.4     
+ SW-ACCESS-03    HP              0               offline         192.168.1.5     
+ SW-ACCESS-04    HP              234             online          192.168.1.6     
+ SW-ACCESS-05    HP              15              online          192.168.1.7     
+ RT-EDGE-01      Fortinet        234             online          192.168.1.254   
+ RT-EDGE-02      Fortinet        234             online          192.168.1.253   
+ AP-FLOOR1-01    Ubiquiti        67              online          192.168.10.101  
+ AP-FLOOR1-02    Ubiquiti        67              online          192.168.10.102  
+ AP-FLOOR2-01    Ubiquiti        12              online          192.168.20.101  
+ AP-FLOOR2-02    Ubiquiti        2               warning         192.168.20.102  
+ AP-FLOOR3-01    Cisco           156             online          192.168.30.101  
+ FW-DMZ-01       Palo Alto       89              online          192.168.100.1   
 
-Lager
-  SW-LAGER-01     Cisco            456 
-  SW-LAGER-02     Cisco             23 
-  RT-LAGER-01     Cisco              2 
-  AP-LAGER-01     Ubiquiti          67 
-  AP-LAGER-02     Ubiquiti           0 
+Lager - Göteborg
+ hostname        vendor      uptime_days         status          ipaddress      
+ SW-LAGER-01     Cisco           456             online          192.168.2.1     
+ SW-LAGER-02     Cisco           23              online          192.168.2.2     
+ RT-LAGER-01     Cisco           2               warning         192.168.2.254   
+ AP-LAGER-01     Ubiquiti        67              online          192.168.200.101 
+ AP-LAGER-02     Ubiquiti        0               offline         192.168.200.102 
 
-Kontor Malmö
-  SW-MAL-CORE-01  Juniper          367 
-  SW-MAL-ACC-01   Juniper           45 
-  SW-MAL-ACC-02   Juniper            8 
-  RT-MAL-01       Mikrotik         178 
-  AP-MAL-01       Aruba             90 
-  AP-MAL-02       Aruba             90 
-  FW-MAL-01       Fortinet         234 
+Kontor - Malmö
+ hostname        vendor      uptime_days         status          ipaddress      
+ SW-MAL-CORE-01  Juniper         367             online          192.168.3.1     
+ SW-MAL-ACC-01   Juniper         45              online          192.168.3.2     
+ SW-MAL-ACC-02   Juniper         8               online          192.168.3.3     
+ RT-MAL-01       Mikrotik        178             online          192.168.3.254   
+ AP-MAL-01       Aruba           90              online          192.168.3.101   
+ AP-MAL-02       Aruba           90              online          192.168.3.102   
+ FW-MAL-01       Fortinet        234             online          192.168.3.200   
 
-Datacenter
-  SW-DC-CORE-01   Cisco            789 
-  SW-DC-CORE-02   Cisco            789 
-  SW-DC-TOR-01    Arista           234 
-  SW-DC-TOR-02    Arista             5 
-  SW-DC-TOR-03    Arista           156 
-  RT-DC-EDGE-01   Juniper          567 
-  FW-DC-01        Checkpoint       445 
-  FW-DC-02        Checkpoint       445 
-  LB-DC-01        F5               234 
-  LB-DC-02        F5               234 
+Datacenter - Stockholm
+ hostname        vendor      uptime_days         status          ipaddress      
+ SW-DC-CORE-01   Cisco           789             online          10.0.0.1        
+ SW-DC-CORE-02   Cisco           789             online          10.0.0.2        
+ SW-DC-TOR-01    Arista          234             online          10.0.1.1        
+ SW-DC-TOR-02    Arista          5               warning         10.0.1.2        
+ SW-DC-TOR-03    Arista          156             online          10.0.1.3        
+ RT-DC-EDGE-01   Juniper         567             online          10.0.0.254      
+ FW-DC-01        Checkpoint      445             online          10.0.0.100      
+ FW-DC-02        Checkpoint      445             online          10.0.0.101      
+ LB-DC-01        F5              234             online          10.0.0.50       
+ LB-DC-02        F5              234             online          10.0.0.51       
 
-Säkerhetskopia
-  SW-DR-01        Dell             890 
-  RT-DR-01        Cisco            890 
-  FW-DR-01        Sophos           345 
+Säkerhetskopia - Umeå
+ hostname        vendor      uptime_days         status          ipaddress      
+ SW-DR-01        Dell            890             online          10.1.0.1        
+ RT-DR-01        Cisco           890             online          10.1.0.254      
+ FW-DR-01        Sophos          345             online          10.1.0.100      
