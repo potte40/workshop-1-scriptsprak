@@ -21,7 +21,7 @@ now = datetime.now().strftime("%Y-%m-%d %H:%M:%S") #Formaterat till sträng
 last_updated = data["last_updated"]
 report += "Rapportdatum: " + now + "\n" + "Datauppdatering: " + last_updated + "\n" + "="*80
 
-# Executive Summary
+### Executive Summary ###
 # Fixa countsvariablar
 offline_count = 0
 warning_count = 0
@@ -56,9 +56,79 @@ report += f"⚠ VARNING: {warning_count} enheter med varningsstatus\n"
 report += f"⚠ {low_uptime_count} enheter med låg uptime (mindre än 30 dagar) - kan indikera instabilitet\n"
 report += f"⚠ {high_port_usage_count} switchar har hög portanvändning (mer än 80%)\n"
 
+### Enheter med problem ###
+# Samla problem per status
+report += "\n""ENHETER MED PROBLEM\n" + "-"*19
+
+statuses = ["offline", "warning"]
+
+for status in statuses:
+    report += f"\nStatus: {status.upper()}\n"
+    
+    for location in data["locations"]:
+        for device in location["devices"]:
+            device_status = device.get("status", "").lower()
+            if device_status == status:
+                hostname = device.get("hostname", "")
+                ip = device.get("ip_address", "")
+                device_type = device.get("type", "").replace("_", " ").title()
+                site = location.get("site", "")
+                
+                # Extra info
+                extra_info = ""
+                
+                # Uptime om warning
+                if device_status == "warning":
+                    uptime_days = device.get("uptime_days")
+                    if uptime_days is not None:
+                        extra_info += f"(uptime: {uptime_days} dagar)"
+                
+                # Anslutna klienter om access point
+                if device_type.lower() == "access point":
+                    clients = device.get("connected_clients") or 0
+                    if clients > 0:
+                        if extra_info:
+                            extra_info += " "
+                        extra_info += f"\n({clients} anslutna klienter!)"
+                
+                # Lägg till extra_info om det finns
+                if extra_info:
+                    extra_info = " " + extra_info
+
+                report += f"{hostname.ljust(15)} {ip.ljust(15)} {device_type.ljust(12)} {site}{extra_info}\n"
+
+
+### Enheter med låg uptime ###
+# Samla uptime_days
+report += "\nENHETER MED LÅG UPTIME (<30 dagar)\n"
+report += "-"*34 + "\n"
+
+# Samla alla låg-uptime-enheter i en lista
+low_uptime_devices = [
+    {
+        "hostname": device.get("hostname", ""),
+        "uptime": device.get("uptime_days", 0),
+        "site": location.get("site", ""),
+        "status": device.get("status", "").lower()
+    }
+    for location in data["locations"]
+    for device in location["devices"]
+    if device.get("uptime_days", 0) < 30
+]
+
+# Sortera på uptime_days (lägst först)
+low_uptime_devices.sort(key=lambda d: d["uptime"])
+
+# Skriv ut
+for dev in low_uptime_devices:
+    status_text = "⚠ KRITISKT" if dev["status"] in ["offline", "warning"] else dev["site"]
+    report += f"{dev['hostname'].ljust(15)} {str(dev['uptime']).rjust(2)} dagar    {status_text}\n"
+
+
+
 # loop through the location list
 for location in data["locations"]:
-    report += f"\n{location["site"]} - {location["city"]}\n" + f"Kontakt: {location["contact"]}\n" + "-"*24 + "\n"
+    report += f"\n{location["site"]} - {location["city"]}\n" + f"Kontakt: {location["contact"]}\n" + "-"*30 + "\n"
     report += "hostname".ljust(16) + "vendor".ljust(12) + "uptime_days".ljust(20) + "status".ljust(16) + "ipaddress".ljust(15) + "\n"
 
     # Dictionaries för att räkna antal per typ och offline per typ
@@ -96,7 +166,7 @@ for location in data["locations"]:
 
 
     # Sektion för summering
-    report += "-"*22 + "\n"
+    report += "-"*30 + "\n"
     report += "Totalt per enhetstyp:\n"
     for dev_type, count in type_counts.items():
         online = status_counts[dev_type].get("online", 0)
@@ -104,7 +174,7 @@ for location in data["locations"]:
         warning = status_counts[dev_type].get("warning", 0)
         report += f"{dev_type.ljust(15)}: {count} st (online: {online}, offline: {offline}, warning: {warning})\n"
     
-    report += "-"*28 + "\n"
+    report += "-"*30 + "\n"
 
     # Skriv totalen för hela site
     report += f"Totalt antal enheter : {total_devices} st (online: {site_status_counts['online']}, offline: {site_status_counts['offline']}, warning: {site_status_counts['warning']})\n"
