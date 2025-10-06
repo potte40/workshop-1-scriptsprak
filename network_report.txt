@@ -1,7 +1,7 @@
 ================================================================================
                          NÄTVERKSRAPPORT - TechCorp AB                          
 ================================================================================
-Rapportdatum: 2025-10-06 15:31:34
+Rapportdatum: 2025-10-06 18:49:39
 Datauppdatering: 2024-09-30T10:30:00
 ================================================================================
 EXECUTIVE SUMMARY
@@ -27,13 +27,34 @@ ENHETER MED LÅG UPTIME (<30 dagar)
 ----------------------------------
 SW-ACCESS-03     0 dagar    ⚠ KRITISKT
 AP-LAGER-02      0 dagar    ⚠ KRITISKT
-AP-FLOOR2-02     2 dagar    ⚠ KRITISKT
-RT-LAGER-01      2 dagar    ⚠ KRITISKT
-SW-DC-TOR-02     5 dagar    ⚠ KRITISKT
+AP-FLOOR2-02     2 dagar    ⚠ VARNING
+RT-LAGER-01      2 dagar    ⚠ VARNING
+SW-DC-TOR-02     5 dagar    ⚠ VARNING
 SW-MAL-ACC-02    8 dagar    Kontor
 AP-FLOOR2-01    12 dagar    Huvudkontor
 SW-ACCESS-05    15 dagar    Huvudkontor
 SW-LAGER-02     23 dagar    Lager
+
+STATISTIK PER ENHETSTYP
+-----------------------
+Access Point   :   9 st (1 offline)
+Firewall       :   5 st (0 offline)
+Load Balancer  :   2 st (0 offline)
+Router         :   6 st (0 offline)
+Switch         :  18 st (1 offline)
+------------------------------
+TOTALT:           40 enheter (2 offline = 5.0% offline)
+
+PORTANVÄNDNING SWITCHAR
+-----------------------
+Site           Switchar  Använt/Totalt  Användning
+Huvudkontor    7 st      162/216          75.0%
+Lager          2 st      57/96            59.4%
+Kontor         3 st      79/96            82.3% ⚠
+Datacenter     5 st      231/240          96.2% ⚠ KRITISKT!
+Säkerhetskopia 1 st      12/28            42.9%
+------------------------------
+Totalt:         541/676 portar används (80.0%)
 
 Huvudkontor - Stockholm
 Kontakt: Anna Andersson

@@ -4,6 +4,9 @@ import json
 # Import time so that we can handle time
 from datetime import datetime
 
+# Import defaultdict from collection so that we can handle that
+from collections import defaultdict
+
 # Read json from products.json to the variable products
 # open(filePath, "r" for read, encoding = character encoding)
 data = json.load(open("network_devices.json","r",encoding = "utf-8"))
@@ -121,8 +124,88 @@ low_uptime_devices.sort(key=lambda d: d["uptime"])
 
 # Skriv ut
 for dev in low_uptime_devices:
-    status_text = "⚠ KRITISKT" if dev["status"] in ["offline", "warning"] else dev["site"]
+    status = dev["status"].lower()
+    status_text = (
+        "⚠ KRITISKT" if status == "offline"
+        else "⚠ VARNING" if status == "warning"
+        else dev["site"]
+    )
     report += f"{dev['hostname'].ljust(15)} {str(dev['uptime']).rjust(2)} dagar    {status_text}\n"
+
+
+    ### Statistik per enhetstyp ###
+report += "\nSTATISTIK PER ENHETSTYP\n"
+report += "-"*23 + "\n"
+
+device_count = defaultdict(int)
+offline_count = defaultdict(int)
+
+# Gå igenom alla enheter i alla sites
+for location in data["locations"]:
+    for device in location["devices"]:
+        dtype = device.get("type", "okänd").replace("_", " ").title()
+        status = device.get("status", "").lower()
+
+        device_count[dtype] += 1
+        if status == "offline":
+            offline_count[dtype] += 1
+
+# Räkna totaler
+total = sum(device_count.values())
+total_offline = sum(offline_count.values())
+offline_percent = (total_offline / total * 100) if total > 0 else 0
+
+# Skriv ut statistikdelen
+for dtype in sorted(device_count.keys()):
+    count = device_count[dtype]
+    off = offline_count.get(dtype, 0)
+    report += f"{dtype.ljust(15)}: {str(count).rjust(3)} st ({off} offline)\n"
+
+report += "-"*30 + "\n"
+report += f"TOTALT: {str(total).rjust(12)} enheter ({total_offline} offline = {offline_percent:.1f}% offline)\n"
+
+
+### Portanvändning switchar ###
+report += "\nPORTANVÄNDNING SWITCHAR\n"
+report += "-"*23 + "\n"
+report += f"{'Site'.ljust(15)}{'Switchar'.ljust(10)}{'Använt/Totalt'.ljust(15)}{'Användning'}\n"
+
+total_used = 0
+total_ports = 0
+
+for location in data["locations"]:
+    switches = [d for d in location["devices"] if d.get("type","").lower() == "switch"]
+    if not switches:
+        continue
+
+    num_switches = len(switches)
+    used_ports_site = sum(d["ports"]["used"] for d in switches if "ports" in d)
+    total_ports_site = sum(d["ports"]["total"] for d in switches if "ports" in d)
+    usage_percent = (used_ports_site / total_ports_site * 100) if total_ports_site > 0 else 0
+
+    # Bestäm symboler
+    symbol = ""
+    if usage_percent >= 95:
+        symbol = " ⚠ KRITISKT!"
+    elif usage_percent >= 80:
+        symbol = " ⚠"
+
+    # Lägg till i report
+    site_name = location.get("site", "").ljust(15)
+    switches_str = (str(num_switches)+' st').ljust(10)
+    ports_str = (f"{used_ports_site}/{total_ports_site}").ljust(15)
+    usage_str = f"{usage_percent:.1f}%".rjust(7)
+
+    report += f"{site_name}{switches_str}{ports_str}{usage_str}{symbol}\n"
+
+    # Lägg till i totalen
+    total_used += used_ports_site
+    total_ports += total_ports_site
+
+# Totalt
+total_percent = (total_used / total_ports * 100) if total_ports > 0 else 0
+report += "-"*30 + f"\nTotalt:         {total_used}/{total_ports} portar används ({total_percent:.1f}%)\n"
+
 
 
 
