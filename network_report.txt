@@ -1,7 +1,7 @@
 ================================================================================
                          NÄTVERKSRAPPORT - TechCorp AB                          
 ================================================================================
-Rapportdatum: 2025-10-06 18:49:39
+Rapportdatum: 2025-10-06 19:58:02
 Datauppdatering: 2024-09-30T10:30:00
 ================================================================================
 EXECUTIVE SUMMARY
@@ -43,7 +43,7 @@ Load Balancer  :   2 st (0 offline)
 Router         :   6 st (0 offline)
 Switch         :  18 st (1 offline)
 ------------------------------
-TOTALT:           40 enheter (2 offline = 5.0% offline)
+Totalt:           40 enheter (2 offline = 5.0% offline)
 
 PORTANVÄNDNING SWITCHAR
 -----------------------
@@ -56,6 +56,28 @@ Säkerhetskopia 1 st      12/28            42.9%
 ------------------------------
 Totalt:         541/676 portar används (80.0%)
 
+SWITCHAR MED HÖG PORTANVÄNDNING (>80%)
+--------------------------------------
+SW-MAL-ACC-02  24/24       100.0% ⚠ FULLT!
+SW-DC-TOR-01   48/48       100.0% ⚠ FULLT!
+SW-DC-TOR-02   47/48        97.9% ⚠
+SW-ACCESS-05   23/24        95.8% ⚠
+SW-DC-CORE-01  46/48        95.8% ⚠
+SW-DC-CORE-02  46/48        95.8% ⚠
+SW-LAGER-02    45/48        93.8% ⚠
+SW-DIST-02     22/24        91.7% ⚠
+SW-DC-TOR-03   44/48        91.7% ⚠
+SW-CORE-01     42/48        87.5% ⚠
+SW-MAL-ACC-01  20/24        83.3% ⚠
+
+VLAN-ÖVERSIKT
+-------------
+Totalt antal unika VLANs i nätverket: 19 st
+VLANs: 10, 20, 30, 40, 50, 100, 110, 120, 200, 300, 400, 500,
+       600, 700, 800, 900, 1000, 2000, 2100
+
+STATISTIK PER SITE
+------------------------------
 Huvudkontor - Stockholm
 Kontakt: Anna Andersson
 ------------------------------
@@ -163,3 +185,16 @@ firewall       : 1 st (online: 1, offline: 0, warning: 0)
 ------------------------------
 Totalt antal enheter : 3 st (online: 3, offline: 0, warning: 0)
 --------------------------------------------------------------------------------
+
+REKOMMENDATIONER
+--------------------
+. AKUT: Undersök offline-enheter omgående (2 st)
+. KRITISKT: Datacenter har extremt hög portanvändning - planera expansion
+. Kontrollera enheter med låg uptime - särskilt de med <5 dagar
+. AP-FLOOR2-02 har 45 anslutna klienter (warning) - överväg lastbalansering
+. AP-FLOOR3-01 har 31 anslutna klienter (online) - överväg lastbalansering
+. Överväg standardisering av vendorer per site för enklare underhåll
+
+================================================================================
+                                  RAPPORT SLUT                                  
+================================================================================

@@ -30,6 +30,7 @@ offline_count = 0
 warning_count = 0
 low_uptime_count = 0
 high_port_usage_count = 0
+
 # Göra loopar och ifsatser för det jag vill veta
 for location in data["locations"]:
     for device in location["devices"]:
@@ -162,7 +163,7 @@ for dtype in sorted(device_count.keys()):
     report += f"{dtype.ljust(15)}: {str(count).rjust(3)} st ({off} offline)\n"
 
 report += "-"*30 + "\n"
-report += f"TOTALT: {str(total).rjust(12)} enheter ({total_offline} offline = {offline_percent:.1f}% offline)\n"
+report += f"Totalt: {str(total).rjust(12)} enheter ({total_offline} offline = {offline_percent:.1f}% offline)\n"
 
 
 ### Portanvändning switchar ###
@@ -183,7 +184,7 @@ for location in data["locations"]:
     total_ports_site = sum(d["ports"]["total"] for d in switches if "ports" in d)
     usage_percent = (used_ports_site / total_ports_site * 100) if total_ports_site > 0 else 0
 
-    # Bestäm symboler
+    # Välj symboler
     symbol = ""
     if usage_percent >= 95:
         symbol = " ⚠ KRITISKT!"
@@ -207,8 +208,78 @@ total_percent = (total_used / total_ports * 100) if total_ports > 0 else 0
 report += "-"*30 + f"\nTotalt:         {total_used}/{total_ports} portar används ({total_percent:.1f}%)\n"
 
 
+### Switchar med hög portanvändning (>80%) ###
+report += "\nSWITCHAR MED HÖG PORTANVÄNDNING (>80%)\n"
+report += "-"*38 + "\n"
+
+# Lista för switches med hög portanvändning
+high_usage_switches = []
+
+for location in data["locations"]:
+    for device in location["devices"]:
+        if device.get("type","").lower() != "switch":
+            continue
+        if "ports" not in device:
+            continue
+
+        used_ports = device["ports"]["used"]
+        total_ports = device["ports"]["total"]
+        usage_percent = (used_ports / total_ports * 100) if total_ports > 0 else 0
+
+        if usage_percent > 80:
+            # Symbol
+            symbol = " ⚠"
+            if used_ports == total_ports:
+                symbol += " FULLT!"
+            high_usage_switches.append({
+                "hostname": device["hostname"],
+                "used": used_ports,
+                "total": total_ports,
+                "percent": usage_percent,
+                "symbol": symbol
+            })
+
+# Sortera efter procent (högst först)
+high_usage_switches.sort(key=lambda x: x["percent"], reverse=True)
+
+# Skriv till rapporten
+for sw in high_usage_switches:
+    report += f"{sw['hostname'].ljust(15)}{str(sw['used'])+'/'+str(sw['total']).ljust(7)}{sw['percent']:7.1f}%{sw['symbol']}\n"
 
 
+### VLAN-ÖVERSIKT ###
+report += "\nVLAN-ÖVERSIKT\n"
+report += "-"*13 + "\n"
+
+# Samla alla VLANs
+vlan_set = set()
+
+for location in data["locations"]:
+    for device in location["devices"]:
+        if device.get("type","").lower() == "switch" and "vlans" in device:
+            vlan_set.update(device["vlans"])
+
+# Sortera VLANs numeriskt
+vlan_list = sorted(vlan_set)
+
+# Skriv total antal och VLANs
+report += f"Totalt antal unika VLANs i nätverket: {len(vlan_list)} st\n"
+
+# Dela upp i rader om många VLANs
+vlans_per_line = 12
+vlan_lines = [vlan_list[i:i+vlans_per_line] for i in range(0, len(vlan_list), vlans_per_line)]
+
+report += "VLANs: "
+for i, line in enumerate(vlan_lines):
+    vlan_str = ", ".join(str(v) for v in line)
+    if i == 0:
+        report += vlan_str + ",\n"
+    else:
+        report += "       " + vlan_str + ("," if i < len(vlan_lines)-1 else "") + "\n"
+
+
+
+report += "\nSTATISTIK PER SITE\n" + "-"*30
 # loop through the location list
 for location in data["locations"]:
     report += f"\n{location["site"]} - {location["city"]}\n" + f"Kontakt: {location["contact"]}\n" + "-"*30 + "\n"
@@ -262,6 +333,60 @@ for location in data["locations"]:
     # Skriv totalen för hela site
     report += f"Totalt antal enheter : {total_devices} st (online: {site_status_counts['online']}, offline: {site_status_counts['offline']}, warning: {site_status_counts['warning']})\n"
     report += "-"*80 + "\n"
+
+    ### REKOMMENDATIONER ###
+report += "\nREKOMMENDATIONER\n"
+report += "-"*20 + "\n"
+
+# 1. AKUT: offline-enheter
+offline_devices = [
+    device["hostname"]
+    for location in data["locations"]
+    for device in location["devices"]
+    if device.get("status","").lower() == "offline"
+]
+num_offline = len(offline_devices)
+if num_offline > 0:
+    report += f". AKUT: Undersök offline-enheter omgående ({num_offline} st)\n"
+
+# 2. KRITISKT: hög portanvändning (>95%) per site
+for location in data["locations"]:
+    switches = [d for d in location["devices"] if d.get("type","").lower() == "switch" and "ports" in d]
+    if not switches:
+        continue
+    used_ports_site = sum(d["ports"]["used"] for d in switches)
+    total_ports_site = sum(d["ports"]["total"] for d in switches)
+    usage_percent = (used_ports_site / total_ports_site * 100) if total_ports_site > 0 else 0
+    if usage_percent >= 95:
+        report += f". KRITISKT: {location.get('site')} har extremt hög portanvändning - planera expansion\n"
+
+# 3. Kontrollera låg uptime (<30 dagar), särskilt <5 dagar
+low_uptime_devices = [
+    device for location in data["locations"]
+    for device in location["devices"]
+    if device.get("uptime_days", 0) < 30
+]
+if low_uptime_devices:
+    short_uptime_devices = [d for d in low_uptime_devices if d.get("uptime_days",0) < 5]
+    if short_uptime_devices:
+        report += ". Kontrollera enheter med låg uptime - särskilt de med <5 dagar\n"
+    else:
+        report += ". Kontrollera enheter med låg uptime (<30 dagar)\n"
+
+# 4. Access points med många klienter (>30 t.ex.) och warning status
+for location in data["locations"]:
+    for device in location["devices"]:
+        if device.get("type","").lower() == "access_point":
+            clients = device.get("connected_clients",0)
+            status = device.get("status","").lower()
+            if clients > 30 or status == "warning":
+                report += f". {device['hostname']} har {clients} anslutna klienter ({status}) - överväg lastbalansering\n"
+
+# 5. Standardisering av vendor per site (exempel)
+report += ". Överväg standardisering av vendorer per site för enklare underhåll\n"
+
+report += ("\n" + "="*80 + "\n" + f"RAPPORT SLUT".center(80) 
++ "\n" + "="*80 + "\n")
         
 # write the report to text file
 with open('network_report.txt', 'w', encoding='utf-8') as f:
