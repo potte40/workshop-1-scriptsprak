@@ -1,7 +1,7 @@
 ================================================================================
                          NÄTVERKSRAPPORT - TechCorp AB                          
 ================================================================================
-Rapportdatum: 2025-10-02 19:29:35
+Rapportdatum: 2025-10-06 13:48:59
 Datauppdatering: 2024-09-30T10:30:00
 ================================================================================
 EXECUTIVE SUMMARY
@@ -12,6 +12,7 @@ EXECUTIVE SUMMARY
 ⚠ 11 switchar har hög portanvändning (mer än 80%)
 
 Huvudkontor - Stockholm
+Kontakt: Anna Andersson
 ------------------------
 hostname        vendor      uptime_days         status          ipaddress      
 SW-CORE-01      Cisco           145             online          192.168.1.1    
@@ -31,14 +32,16 @@ AP-FLOOR3-01    Cisco           156             online          192.168.30.101
 FW-DMZ-01       Palo Alto       89              online          192.168.100.1  
 ----------------------
 Totalt per enhetstyp:
-switch         : 7 st
-router         : 2 st
-access_point   : 5 st
-firewall       : 1 st
+switch         : 7 st (online: 6, offline: 1, warning: 0)
+router         : 2 st (online: 2, offline: 0, warning: 0)
+access_point   : 5 st (online: 4, offline: 0, warning: 1)
+firewall       : 1 st (online: 1, offline: 0, warning: 0)
 ----------------------------
-Totalt antal enheter : 15 st
+Totalt antal enheter : 15 st (online: 13, offline: 1, warning: 1)
 --------------------------------------------------------------------------------
+
 Lager - Göteborg
+Kontakt: Björn Björnsson
 ------------------------
 hostname        vendor      uptime_days         status          ipaddress      
 SW-LAGER-01     Cisco           456             online          192.168.2.1    
@@ -48,13 +51,15 @@ AP-LAGER-01     Ubiquiti        67              online          192.168.200.101
 AP-LAGER-02     Ubiquiti        0               offline         192.168.200.102
 ----------------------
 Totalt per enhetstyp:
-switch         : 2 st
-router         : 1 st
-access_point   : 2 st
+switch         : 2 st (online: 2, offline: 0, warning: 0)
+router         : 1 st (online: 0, offline: 0, warning: 1)
+access_point   : 2 st (online: 1, offline: 1, warning: 0)
 ----------------------------
-Totalt antal enheter : 5 st
+Totalt antal enheter : 5 st (online: 3, offline: 1, warning: 1)
 --------------------------------------------------------------------------------
+
 Kontor - Malmö
+Kontakt: Cecilia Carlsson
 ------------------------
 hostname        vendor      uptime_days         status          ipaddress      
 SW-MAL-CORE-01  Juniper         367             online          192.168.3.1    
@@ -66,14 +71,16 @@ AP-MAL-02       Aruba           90              online          192.168.3.102
 FW-MAL-01       Fortinet        234             online          192.168.3.200  
 ----------------------
 Totalt per enhetstyp:
-switch         : 3 st
-router         : 1 st
-access_point   : 2 st
-firewall       : 1 st
+switch         : 3 st (online: 3, offline: 0, warning: 0)
+router         : 1 st (online: 1, offline: 0, warning: 0)
+access_point   : 2 st (online: 2, offline: 0, warning: 0)
+firewall       : 1 st (online: 1, offline: 0, warning: 0)
 ----------------------------
-Totalt antal enheter : 7 st
+Totalt antal enheter : 7 st (online: 7, offline: 0, warning: 0)
 --------------------------------------------------------------------------------
+
 Datacenter - Stockholm
+Kontakt: David Davidsson
 ------------------------
 hostname        vendor      uptime_days         status          ipaddress      
 SW-DC-CORE-01   Cisco           789             online          10.0.0.1       
@@ -88,14 +95,16 @@ LB-DC-01        F5              234             online          10.0.0.50
 LB-DC-02        F5              234             online          10.0.0.51      
 ----------------------
 Totalt per enhetstyp:
-switch         : 5 st
-router         : 1 st
-firewall       : 2 st
-load_balancer  : 2 st
+switch         : 5 st (online: 4, offline: 0, warning: 1)
+router         : 1 st (online: 1, offline: 0, warning: 0)
+firewall       : 2 st (online: 2, offline: 0, warning: 0)
+load_balancer  : 2 st (online: 2, offline: 0, warning: 0)
 ----------------------------
-Totalt antal enheter : 10 st
+Totalt antal enheter : 10 st (online: 9, offline: 0, warning: 1)
 --------------------------------------------------------------------------------
+
 Säkerhetskopia - Umeå
+Kontakt: Erik Eriksson
 ------------------------
 hostname        vendor      uptime_days         status          ipaddress      
 SW-DR-01        Dell            890             online          10.1.0.1       
@@ -103,9 +112,9 @@ RT-DR-01        Cisco           890             online          10.1.0.254
 FW-DR-01        Sophos          345             online          10.1.0.100     
 ----------------------
 Totalt per enhetstyp:
-switch         : 1 st
-router         : 1 st
-firewall       : 1 st
+switch         : 1 st (online: 1, offline: 0, warning: 0)
+router         : 1 st (online: 1, offline: 0, warning: 0)
+firewall       : 1 st (online: 1, offline: 0, warning: 0)
 ----------------------------
-Totalt antal enheter : 3 st
+Totalt antal enheter : 3 st (online: 3, offline: 0, warning: 0)
 --------------------------------------------------------------------------------

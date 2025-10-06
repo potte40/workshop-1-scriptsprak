@@ -58,36 +58,57 @@ report += f"⚠ {high_port_usage_count} switchar har hög portanvändning (mer �
 
 # loop through the location list
 for location in data["locations"]:
-    report += f"\n{location['site']} - {location['city']}\n" + "-"*24 + "\n"
+    report += f"\n{location["site"]} - {location["city"]}\n" + f"Kontakt: {location["contact"]}\n" + "-"*24 + "\n"
     report += "hostname".ljust(16) + "vendor".ljust(12) + "uptime_days".ljust(20) + "status".ljust(16) + "ipaddress".ljust(15) + "\n"
 
-    type_counts = {}  # En ordlista för att räkna varje typ
+    # Dictionaries för att räkna antal per typ och offline per typ
+    type_counts = {}
+    status_counts = {}
     total_devices = 0
-# loop för att hitta alla typer
+    site_status_counts = {"online": 0, "offline": 0, "warning": 0}
+
+    # Loopa igenom alla enheter
     for device in location["devices"]:
         report += ("" 
                    + device["hostname"].ljust(15) + " "
                    + device["vendor"].ljust(15) + " "
                    + str(device["uptime_days"]).ljust(15) + " " 
                    + str(device["status"]).ljust(15) + " "
-                   + str(device["ip_address"]).ljust(15) + "\n")
+                   + str(device["ip_address"]).ljust(15) + "\n"
+                   )
         total_devices += 1
 
-        device_type = device["type"]
-        if device_type in type_counts:
-            type_counts[device_type] += 1
-        else:
-            type_counts[device_type] = 1
+        device_type = device["type"].lower()
+        status = device["status"].lower()
+
+        # Initiera räknare om det inte finns
+        if device_type not in type_counts:
+            type_counts[device_type] = 0
+            status_counts[device_type] = {"online": 0, "offline": 0, "warning": 0}
+
+        # Räkna Status
+        type_counts[device_type] += 1
+        if status in status_counts[device_type]:
+            status_counts[device_type][status] += 1
+
+        if status in site_status_counts:
+            site_status_counts[status] += 1
+
+
+    # Sektion för summering
     report += "-"*22 + "\n"
-    # Skriv total per typ
     report += "Totalt per enhetstyp:\n"
     for dev_type, count in type_counts.items():
-        report += f"{dev_type.ljust(15)}: {count} st\n"
+        online = status_counts[dev_type].get("online", 0)
+        offline = status_counts[dev_type].get("offline", 0)
+        warning = status_counts[dev_type].get("warning", 0)
+        report += f"{dev_type.ljust(15)}: {count} st (online: {online}, offline: {offline}, warning: {warning})\n"
     
     report += "-"*28 + "\n"
 
     # Skriv totalen för hela site
-    report += f"Totalt antal enheter : {total_devices} st\n" + "-"*80
+    report += f"Totalt antal enheter : {total_devices} st (online: {site_status_counts['online']}, offline: {site_status_counts['offline']}, warning: {site_status_counts['warning']})\n"
+    report += "-"*80 + "\n"
         
 # write the report to text file
 with open('network_report.txt', 'w', encoding='utf-8') as f:
